@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import axios from "axios";
 import type {RootState} from "./store";
+import {setAuthAction} from "./mainSlice";
 
 const BASE_URL = 'http://localhost:3000/'
 
@@ -21,12 +21,20 @@ export const userApiSlice = createApi({
         getProfile: builder.query({
             query: () => ({url: 'auth/profile'})
         }),
-        registerUser: builder.mutation({
+        registerUser: builder.mutation<IAuth, IRegisterUser>({
             query: formData => ({
                 url: 'auth/register',
                 method: 'POST',
                 body: formData
-            })
+            }),
+            async onQueryStarted(args, {dispatch, queryFulfilled}) {
+                try {
+                    const {data} = await queryFulfilled;
+                    dispatch(setAuthAction(data))
+                } catch (e) {
+                }
+            }
+
         })
     }),
 });

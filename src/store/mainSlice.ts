@@ -1,4 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
+import {userApiSlice} from "./userApiSlice";
 
 const initialState: IState = {
     auth: {
@@ -29,6 +30,14 @@ export const mainSlice = createSlice({
             console.log("profile: " + action.payload);
         }
     },
+    extraReducers: builder => {
+        builder.addMatcher(
+            userApiSlice.endpoints.registerUser.matchFulfilled,
+            (state, action) => {
+                state.auth = action.payload;
+            }
+        )
+    }
 })
 
 export const {setAuthAction, setProfileAction, setLoading, setError} = mainSlice.actions;

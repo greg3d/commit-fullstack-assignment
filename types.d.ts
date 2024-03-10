@@ -17,3 +17,8 @@ interface IState {
 }
 
 type IRegisterUser = Omit<IProfile, 'id'> & { password: string }
+
+interface IGenericResponse {
+    status: string;
+    message: string;
+}

@@ -1,12 +1,21 @@
-import {useGetProfileQuery} from "./store/userApiSlice";
+import {useGetProfileQuery, useRegisterUserMutation} from "./store/userApiSlice";
+import {SubmitHandler} from "react-hook-form";
 
 const App = () => {
 
-    const {data: {profile}, isError, isFetching, refetch} = useGetProfileQuery("df")
+    const [registerUser, {isLoading}] = useRegisterUserMutation()
 
-    if (isFetching) return <div>fetching....</div>
-    if (isError) return <div>ERROR</div>
-    if (profile) return <div>{profile.phone} {profile.id}</div>
+    const submit = (e:SubmitHandler) => {
+
+    }
+
+    return (
+        <form id={"test"} onSubmit={submit}>
+            <input type={"text"} name={"username"}/>
+            <input type={"text"} name={"phone"}/>
+            <input type={"password"} name={"password"}/>
+        </form>
+    );
 
 }
 
