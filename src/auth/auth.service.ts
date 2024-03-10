@@ -11,7 +11,6 @@ class UserAlreadyExistsException extends HttpException {
   constructor(username: string) {
     super(`User with username '${username}' already exists!`, 409);
   }
-
 }
 
 @Injectable()
@@ -41,4 +40,3 @@ export class AuthService {
     return await this.usersRepository.save(newUser);
   }
 }
-
