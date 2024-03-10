@@ -1,7 +1,7 @@
 {
-  "name": "vite-template-redux",
+  "name": "commit-assignment-client",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,10 +15,17 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.0.12",
+    "@mui/icons-material": "^5.15.12",
+    "@mui/material": "^5.15.12",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.17",
     "@reduxjs/toolkit": "^2.0.1",
+    "axios": "^1.6.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^9.1.0"
+    "react-redux": "^9.1.0",
+    "react-router-dom": "^6.22.3",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.4",
