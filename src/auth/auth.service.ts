@@ -7,9 +7,9 @@ import { Repository } from 'typeorm';
 
 const ROUNDS = 8;
 
-class UserAlreadyExists extends HttpException {
+class UserAlreadyExistsException extends HttpException {
   constructor(username: string) {
-    super(`${username} already exists!`, 409);
+    super(`User with username '${username}' already exists!`, 409);
   }
 
 }
@@ -35,9 +35,10 @@ export class AuthService {
 
   async register(dto: NewUserDto): Promise<any> {
     const user = await this.usersRepository.findOneBy({ username: dto.username });
-    if (user) throw new UserAlreadyExists(dto.username);
+    if (user) throw new UserAlreadyExistsException(dto.username);
     dto.password = await bcrypt.hash(dto.password, ROUNDS);
-    return this.usersRepository.create(dto);
+    const newUser = this.usersRepository.create(dto);
+    return await this.usersRepository.save(newUser);
   }
 }
 

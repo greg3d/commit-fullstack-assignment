@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { User } from './user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -7,15 +8,13 @@ export class UsersController {
   constructor(private readonly service: UsersService) {
   }
 
-  @Get('current')
-  getCurrentUser(@Req() request: Request) {
-    if (request.headers.has('uname')) {
-      return this.service.findOne(request.headers.get('uname'));
-    }
+  @Get()
+  getAll() {
+    return "users";
   }
 
   @Get(':username')
-  getUser(@Param('username') username: string) {
+  getUser(@Param('username') username: string) : Promise<User> {
     return this.service.findOne(username);
   }
 }
