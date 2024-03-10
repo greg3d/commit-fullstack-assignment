@@ -6,11 +6,12 @@ import { jwtConstant } from './constants';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [UsersModule,
+  imports: [
+    UsersModule,
     JwtModule.register({
       global: true,
       secret: jwtConstant.secret,
-      signOptions: { expiresIn: '120s' }
+      signOptions: { expiresIn: '1h' }
     })],
   controllers: [AuthController],
   providers: [AuthService]
