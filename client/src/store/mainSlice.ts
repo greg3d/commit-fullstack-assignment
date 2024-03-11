@@ -1,5 +1,4 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {number} from "zod";
 
 const initialState: IState = {
     auth: {
