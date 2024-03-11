@@ -1,4 +1,4 @@
-interface IProfile {
+interface IProfile extends Record<string, number | string>{
     id: number
     username: string
     phone: string

@@ -10,7 +10,6 @@ export const userApiSlice = createApi({
         baseUrl: BASE_URL,
         prepareHeaders: (headers, {getState}) => {
             const token = (getState() as RootState).mainSlice.auth.token;
-            //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsInVzZXJuYW1lIjoic2VyZ2V5IiwiaWF0IjoxNzEwMDc2NDIyLCJleHAiOjE3MTAwODAwMjJ9.HTfUyRVY_bM_2toPBb-d9qSlRwrMKyKnsmcnSAbSjKk"
             if (token) {
                 headers.set('authorization', `Bearer ${token}`);
             }
@@ -34,7 +33,6 @@ export const userApiSlice = createApi({
                 } catch (e) {
                 }
             }
-
         })
     }),
 });

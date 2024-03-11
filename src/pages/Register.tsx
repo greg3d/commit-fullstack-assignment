@@ -1,4 +1,11 @@
-import React, {ChangeEvent, ChangeEventHandler, useEffect, useState} from 'react';
+import React, {
+    ChangeEvent,
+    ChangeEventHandler,
+    FormEvent,
+    useEffect,
+    useRef,
+    useState
+} from 'react';
 import {useRegisterUserMutation} from "../store/userApiSlice";
 import {useNavigate} from "react-router-dom";
 import {Box, Button} from "@mui/material";
@@ -14,6 +21,8 @@ class InputData {
     value: string = ""
     type: string = "text"
     validators: IValidator[] = []
+    error: string = ""
+    confirm: string = ""
 
     private constructor(name: string, type: string) {
         this.name = name;
@@ -29,40 +38,70 @@ class InputData {
         return this;
     }
 
+    addConfirm = (field: string) => {
+        this.confirm = field;
+        return this;
+    }
+
+    getErrorMessage = () => {
+        return this.error === "" ? false : this.error
+    }
+
     setValue = (val: string) => {
         val = val.trim();
         if (val !== this.value) this.value = val;
     }
 
     validate = () => {
-        this.validators.forEach(validator => {
+        for (let i = 0; i < this.validators.length; i++) {
+            const validator = this.validators[i]
             if (!validator.fun(this.value)) {
-                return {
-                    result: false,
-                    message: validator.message
-                }
+                this.error = validator.message;
+                return false;
             }
-        });
-
-        return {
-            result: true,
-            message: ""
         }
+        this.error = ""
+        return true;
     }
 
-    eq = (val: string) => this.value === val
+
+    // shitty method
+    eq = (val: string) => {
+        if (this.value !== val) {
+            this.error = this.name + " must be equal to password"
+            return false;
+        } else {
+            this.error = ""
+            return true;
+        }
+    }
+}
+
+export const validateForm = (form: InputData[]) => {
+    let ret = true;
+    form.forEach(field => {
+        if (field.confirm !== "") {
+            if (!field.eq(form.find(item => item.name === field.confirm)?.value!)) {
+                ret = false
+            }
+            //
+        } else {
+            ret = field.validate() ? ret : false
+        }
+    });
+    return ret;
 }
 
 const initialState: InputData[] = [
     InputData.create('username', 'text')
-        .addValidator(val => val.length > 1, 'Enter username!')
-        .addValidator(val => val.length < 20, 'Username too long!')
-        .addValidator(val => /^[a-zA-Z]+$/.test(val)),
+        .addValidator(val => val.length > 1, 'Enter username')
+        .addValidator(val => val.length < 32, 'Username too long')
+        .addValidator(val => /^[A-z]+([a-zA-Z0-9])*$/.test(val), 'Username should start with letter, and should not contain white spaces'),
     InputData.create('phone', 'text')
-        .addValidator(val => val.length >= 1, 'enter phone')
-        .addValidator(val => val.length >= 6, 'phone too short')
-        .addValidator(val => val.length <= 12, 'phone too long')
-        .addValidator(val => /^[+08]([0-9]+(-| )?[0-9]+)*[0-9]$/.test(val), "wrong phone format"),
+        .addValidator(val => val.length > 0, 'enter phone')
+        .addValidator(val => val.length > 6, 'phone too short')
+        .addValidator(val => val.length < 20, 'phone too long')
+        .addValidator(val => /^[+0-9]([0-9]*(-|\s)?[0-9]+)*[0-9]$/.test(val), "wrong phone format"),
     InputData.create('password', 'password')
         .addValidator(val => val.length >= 1, 'enter password')
         .addValidator(val => val.length >= 6, 'password too short')
@@ -71,63 +110,83 @@ const initialState: InputData[] = [
         .addValidator(val => /^.*[0-9]+.*$/.test(val), "should contain at least one digit")
         .addValidator(val => /^.*[~!@#$%^&*]+.*$/.test(val), "should contain at least one special (~!@#$%^&*) char"),
     InputData.create('passwordConfirm', 'password')
+        .addConfirm('password')
 ]
-
-//form.find(item=>item.name==='passwordConfirm')?.eq(form.find(item=>item.name==='password')?.value!)
-
 
 const Register = () => {
 
-    //const [registerUser, {isLoading, error, isError, isSuccess}] = useRegisterUserMutation();
+    const [registerUser, {isLoading, error, isError, isSuccess}] = useRegisterUserMutation();
 
     const [former, setFormer] = useState(initialState)
+    const [allow, setAllow] = useState(true)
     const navigate = useNavigate();
-
-    // const {
-    //     reset,
-    //     handleSubmit,
-    //     formState: {isSubmitSuccessful},
-    // } = methods;
-
-    // useEffect(() => {
-    //     if (isSuccess) navigate('/profile')
-    //
-    //     if (isError) {
-    //         console.log(error);
-    //     }
-    // }, [isLoading])
-
-    // useEffect(() => {
-    //     if (isSubmitSuccessful) {
-    //         reset();
-    //     }
-    // }, [isSubmitSuccessful]);
+    const registerForm = useRef<HTMLFormElement>(null)
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value
-        const name = e.target.name
+        const val = e.target.value;
+        const name = e.target.name;
         setFormer((state) => {
-            const [...temp] = state
-            const obj = temp.find(item => item.name === name)
+            const [...temp] = state;
+            const obj = temp.find(item => item.name === name);
             if (obj) {
-                obj.value = val
-                return temp
+                if (obj.value !== val) {
+                    obj.value = val;
+                    obj.validate();
+                }
             }
-            return state
+            let flag = true
+            temp.forEach(field => flag = field.error !== "" ? false : flag)
+            setAllow(flag)
+            return temp;
         })
     }
 
+    const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setAllow(validateForm(former));
+        const obj: Record<string, any> = {};
+        const data = former.map((item) => {
+            if (item.confirm === "") {
+                obj[item.name] = item.value
+            }
+        })
+
+        if (allow) registerUser(obj as IRegisterUser);
+    }
+
     return (
-
         <Box>
-            <form id={"register-form"}>
-                {former.map(item => <input type={item.type} name={item.name} value={item.value}
-                                           onChange={changeHandler}/>)}
+            <form id={"register-form"} ref={registerForm} onSubmit={submitHandler}>
+                {former.map(item => <CustomInput
+                    key={item.name}
+                    type={item.type}
+                    name={item.name}
+                    value={item.value}
+                    errorMessage={item.error}
+                    onChange={changeHandler}/>)}
 
-                <button type={"submit"}>Submit</button>
+                <button disabled={!allow} type={"submit"}>Submit</button>
             </form>
         </Box>
     );
 };
 
 export default Register;
+
+const CustomInput = ({type, name, value, errorMessage, onChange}: {
+        type: string
+        name: string
+        value: string
+        errorMessage: string | boolean
+        onChange: (e: ChangeEvent<HTMLInputElement>) => void
+    }) => {
+        return (
+            <div>
+                <input type={type} name={name} value={value}
+                       onChange={onChange}/>
+                <div>{errorMessage}</div>
+
+            </div>
+        );
+    }
+;

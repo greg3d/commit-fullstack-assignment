@@ -23,7 +23,7 @@ export const mainSlice = createSlice({
         },
         setAuthAction(state: IState, action: { payload: IAuth, type: string }) {
             state.auth = action.payload;
-            console.log("auth: " + action.payload);
+            console.log("auth: " + action.payload.token);
         },
         setProfileAction(state: IState, action: { payload: IProfile, type: string }) {
             state.profile = action.payload;
