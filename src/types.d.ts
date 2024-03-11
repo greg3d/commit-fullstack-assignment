@@ -10,13 +10,20 @@ interface IAuth {
 }
 
 interface IState {
-    auth: IAuth,
-    profile: IProfile | undefined,
-    isLoading: boolean,
-    error: any
+    auth: IAuth
+    profile: IProfile | undefined
+    isLoading: boolean
+    error: string
+    tab: number
 }
 
 type IRegisterUser = Omit<IProfile, 'id'> & { password: string }
+
+interface IValidator {
+    fun: (val: string) => boolean
+    message: string
+}
+
 
 interface IGenericResponse {
     status: string;
