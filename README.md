@@ -10,8 +10,9 @@ This project contains two application:
 `npm run start_client` - runs client (Vite) on http://localhost:5173/
 
 Links on original repos:
-client: <https://github.com/greg3d/commit-assignment-client>
-server: <https://github.com/greg3d/commit-assignment-server>
+
+- client: <https://github.com/greg3d/commit-assignment-client>
+- server: <https://github.com/greg3d/commit-assignment-server>
 
 *Node version: 20.10.0* \
 Apps runs in **dev** mode
