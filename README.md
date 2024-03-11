@@ -77,7 +77,7 @@ Apps runs in **dev** mode
     response: {
         id: number
         username: string
-        phone: string //JWT
+        phone: string
         password: string //bcrypt hash
     }
 
