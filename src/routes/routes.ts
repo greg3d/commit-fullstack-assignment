@@ -8,13 +8,13 @@ export const routes = [
         Component: Layout,
         children: [
             {
-                name: "User Register",
+                name: "Form",
                 path: "/",
                 index: true,
                 Component: Register
             },
             {
-                name: "My Profile",
+                name: "User",
                 path: "/profile",
                 Component: Profile
             }
