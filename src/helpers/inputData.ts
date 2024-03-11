@@ -25,10 +25,6 @@ export class InputData {
         return this;
     }
 
-    getErrorMessage = () => {
-        return this.error === "" ? false : this.error
-    }
-
     setValue = (val: string) => {
         val = val.trim();
         if (val !== this.value) this.value = val;
@@ -66,7 +62,7 @@ export const validateForm = (form: InputData[]) => {
             }
             //
         } else {
-            if(!field.validate()) {
+            if (!field.validate()) {
                 ret = false
             }
         }

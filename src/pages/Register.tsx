@@ -47,7 +47,7 @@ const Register = () => {
             dispatch(setError(auth.username + ", you successfully registered! Token saved to state. Please proceed to next tab."))
             //navigate("profile")
         }
-    }, [isSuccess])
+    }, [isSuccess, dispatch, auth.username])
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
@@ -57,7 +57,7 @@ const Register = () => {
             const obj = temp.find(item => item.name === name);
             if (obj) {
                 if (obj.value !== val) {
-                    obj.value = val;
+                    obj.setValue(val);
                     obj.validate();
                 }
             }
@@ -97,8 +97,14 @@ const Register = () => {
                     errorMessage={item.error}
                     onChange={changeHandler}/>)}
             </Box>
-            <Button variant={"contained"} size={"large"} disabled={!allow.current}
-                    type={"submit"}>Submit</Button>
+            <Button
+                variant={"contained"}
+                size={"large"}
+                disabled={!allow.current}
+                type={"submit"}
+            >
+                Submit
+            </Button>
         </form>
     );
 };
