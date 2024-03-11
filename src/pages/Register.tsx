@@ -26,7 +26,7 @@ const initialState: InputData[] = [
     InputData.create('password', 'password')
         .addValidator(val => val.length >= 1, 'Password is required')
         .addValidator(val => val.length >= 6, 'Password too short')
-        .addValidator(val => val.length <= 10, 'Password too long')
+        .addValidator(val => val.length <= 12, 'Password too long')
         .addValidator(val => /^.*[A-Z]+.*$/.test(val), "Should contain at least one capital letter")
         .addValidator(val => /^.*[0-9]+.*$/.test(val), "Should contain at least one digit")
         .addValidator(val => /^.*[~!@#$%^&*]+.*$/.test(val), "should contain at least one special (~!@#$%^&*) char"),
@@ -39,7 +39,7 @@ const Register = () => {
     const dispatch = useAppDispatch();
     const {auth} = useAppSelector((state: RootState) => state.mainSlice)
 
-    const [registerUser, {isError, isSuccess}] = useRegisterUserMutation();
+    const [registerUser, {isSuccess}] = useRegisterUserMutation();
     const [former, setFormer] = useState(initialState)
     const registerForm = useRef<HTMLFormElement>(null)
     let allow = useRef<boolean>(true);
@@ -50,7 +50,7 @@ const Register = () => {
             dispatch(setError(auth.username + ", you successfully registered! Token saved to state. Please proceed to next tab."))
             //navigate("profile")
         }
-    }, [isSuccess, isError])
+    }, [isSuccess])
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;

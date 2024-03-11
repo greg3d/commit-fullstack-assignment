@@ -9,6 +9,9 @@ const CustomInput = ({type, name, value, errorMessage, onChange}: {
         errorMessage: string | boolean
         onChange: (e: ChangeEvent<HTMLInputElement>) => void
     }) => {
+
+        let label = name.charAt(0).toUpperCase() + name.slice(1)
+        if (name === "passwordConfirm") label = 'Confirm Password';
         return (
             <Box>
                 <TextField
@@ -17,7 +20,7 @@ const CustomInput = ({type, name, value, errorMessage, onChange}: {
                     type={type}
                     name={name}
                     value={value}
-                    label={name}
+                    label={label}
                     variant="outlined"
                     error={errorMessage != ""}
                     helperText={errorMessage + " "}
@@ -25,7 +28,6 @@ const CustomInput = ({type, name, value, errorMessage, onChange}: {
                     color="success"
                 />
             </Box>
-
         );
     }
 ;

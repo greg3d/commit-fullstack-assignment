@@ -8,8 +8,7 @@ import {
     Paper,
     ListItem,
     List,
-    ListItemAvatar,
-    Avatar, Divider, ListItemText
+ Divider, ListItemText
 } from "@mui/material";
 
 const Profile = () => {
@@ -23,21 +22,22 @@ const Profile = () => {
 
     return (
         <Box>
-            <Paper elevation={3}>
-                <List sx={style}>
-                    <ListItem>
-                        <ListItemText primary={profile?.username} />
-                    </ListItem>
-                    <Divider component="li" />
-                    <ListItem>
-                        <ListItemText primary={profile?.phone} />
-                    </ListItem>
-                    <Divider variant="inset" component="li" />
-                </List>
+            <Paper elevation={1}>
+                <List>
 
-                {profile?.username}
-                {profile?.phone}
-                {profile?.id}
+                    <ListItem>
+                        <ListItemText><b>Id:</b> {profile?.id}</ListItemText>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListItemText><b>Username:</b> {profile?.username}</ListItemText>
+                    </ListItem>
+
+                    <ListItem>
+                        <ListItemText><b>Phone:</b> {profile?.phone}</ListItemText>
+                    </ListItem>
+
+                </List>
             </Paper>
 
         </Box>
