@@ -13,7 +13,7 @@ const initialState: InputData[] = [
     InputData.create('username', 'text')
         .addValidator(val => val.length > 1, 'Username is required')
         .addValidator(val => val.length < 32, 'Username too long')
-        .addValidator(val => /^[A-z]+([a-zA-Z0-9])*$/.test(val), 'Username should start with letter, and should not contain white spaces'),
+        .addValidator(val => /^[A-z]+([a-zA-Z0-9])*$/.test(val), 'Latin letters, should start with the letter, not contain white spaces'),
     InputData.create('phone', 'text')
         .addValidator(val => val.length > 0, 'Phone is required')
         .addValidator(val => val.length > 5, 'Phone too short')
@@ -43,7 +43,17 @@ const Register = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            setFormer(initialState)
+            // clear all fields
+            setFormer(state => {
+                const [...temp] = state
+
+                temp.forEach(field => {
+                    field.setValue("");
+                    field.error = "";
+                })
+
+                return temp;
+            })
             dispatch(setError(auth.username + ", you successfully registered! Token saved to state. Please proceed to next tab."))
             //navigate("profile")
         }
