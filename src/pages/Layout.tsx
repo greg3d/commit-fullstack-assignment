@@ -1,28 +1,60 @@
-import type {SyntheticEvent} from 'react';
 import React, {useState} from 'react';
 import {routes} from '../routes/routes'
 import {Link, Outlet} from "react-router-dom";
-import {Box, Container, Tab, Tabs} from "@mui/material";
+import {
+    Backdrop,
+    Box, Button,
+    Container,
+    Dialog, DialogActions,
+    DialogContent, DialogContentText,
+    DialogTitle, LinearProgress,
+    Tab,
+    Tabs
+} from "@mui/material";
+
+import {RootState, useAppDispatch, useAppSelector} from "../store/store";
+import {ackError, setTab} from "../store/mainSlice";
 
 const Layout = () => {
 
     const [{children}] = (routes as typeof routes)
-    const [tab, setTab] = useState(0);
+    const dispatch = useAppDispatch()
+    const {error, isLoading, tab} = useAppSelector((state: RootState) => state.mainSlice)
 
     return (
-        <Container maxWidth="xl">
-            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-                <Tabs centered={true} value={tab} onChange={(e, value) => setTab(value)}
-                      aria-label="basic tabs example">
-                    {children.map((route, index) => (
-                        <Tab key={route.name} label={route.name} component={Link}
-                             to={route.path}
-                             value={index}/>))}
-                </Tabs>
-            </Box>
+        <>
+            <Container maxWidth="sm">
+                <Box sx={{borderBottom: 1, borderColor: 'divider', marginBottom: '1rem'}}>
+                    <Tabs value={tab} onChange={(e, value) => dispatch(setTab(value))}
+                          aria-label="basic tabs example">
+                        {children.map((route, index) => (
+                            <Tab key={route.name} label={route.name} component={Link}
+                                 to={route.path}
+                                 value={index}/>))}
+                    </Tabs>
+                </Box>
+                <Outlet/>
+                {isLoading && <LinearProgress/>}
+            </Container>
 
-            <Outlet />
-        </Container>
+            <Dialog
+                open={error !== ""}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                onClose={() => dispatch(ackError(1))}
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        {error}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={() => dispatch(ackError(1))}>
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
 
