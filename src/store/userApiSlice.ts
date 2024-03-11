@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import type {RootState} from "./store";
-import {setAuthAction} from "./mainSlice";
+import {setAuthAction, setError, setLoading, setProfileAction} from "./mainSlice";
 
 const BASE_URL = 'http://localhost:3000/'
 
@@ -18,7 +18,19 @@ export const userApiSlice = createApi({
     }),
     endpoints: (builder) => ({
         getProfile: builder.query({
-            query: () => ({url: 'auth/profile'})
+            query: () => ({url: 'auth/profile'}),
+            async onQueryStarted(args, {dispatch, queryFulfilled}) {
+                dispatch(setLoading(true));
+                try {
+                    const {data} = await queryFulfilled;
+                    dispatch(setProfileAction(data.profile))
+                } catch (e) {
+                    console.log(e)
+                    dispatch(setError(e.error?.data.statusCode + ": " + e.error?.data.message))
+                } finally {
+                    dispatch(setLoading(false));
+                }
+            }
         }),
         registerUser: builder.mutation<IAuth, IRegisterUser>({
             query: formData => ({
@@ -27,10 +39,15 @@ export const userApiSlice = createApi({
                 body: formData
             }),
             async onQueryStarted(args, {dispatch, queryFulfilled}) {
+                dispatch(setLoading(true));
                 try {
                     const {data} = await queryFulfilled;
                     dispatch(setAuthAction(data))
                 } catch (e) {
+                    console.log(e)
+                    dispatch(setError(e.error.data.statusCode + ": " + e.error.data.message))
+                } finally {
+                    dispatch(setLoading(false));
                 }
             }
         })

@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {userApiSlice} from "./userApiSlice";
+import {number} from "zod";
 
 const initialState: IState = {
     auth: {
@@ -8,7 +8,8 @@ const initialState: IState = {
     },
     profile: undefined,
     isLoading: false,
-    error: null
+    error: "",
+    tab: 0
 }
 
 export const mainSlice = createSlice({
@@ -16,10 +17,16 @@ export const mainSlice = createSlice({
     initialState,
     reducers: {
         setLoading(state, action) {
-            state.isLoading = action.payload
+            state.isLoading = action.payload;
         },
         setError(state, action) {
-            state.error = action.payload
+            state.error = action.payload;
+        },
+        ackError(state, action) {
+            state.error = "";
+        },
+        setTab(state, action) {
+            state.tab = action.payload;
         },
         setAuthAction(state: IState, action: { payload: IAuth, type: string }) {
             state.auth = action.payload;
@@ -27,17 +34,8 @@ export const mainSlice = createSlice({
         },
         setProfileAction(state: IState, action: { payload: IProfile, type: string }) {
             state.profile = action.payload;
-            console.log("profile: " + action.payload);
+            console.log("profile: " + action.payload.username);
         }
-    },
-    extraReducers: builder => {
-        builder.addMatcher(
-            userApiSlice.endpoints.registerUser.matchFulfilled,
-            (state, action) => {
-                state.auth = action.payload;
-            }
-        )
     }
 })
-
-export const {setAuthAction, setProfileAction, setLoading, setError} = mainSlice.actions;
+export const {setAuthAction, setProfileAction, setLoading, setError, ackError, setTab} = mainSlice.actions;
