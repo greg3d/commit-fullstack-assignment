@@ -26,6 +26,6 @@ export class AuthController {
   async getProfile(@Request() req) {
     const user: Omit<User, 'password'> = await this.usersService.findOne(req.user.username);
     delete user['password'];
-    return { ...req.user, user };
+    return { profile: user };
   }
 }

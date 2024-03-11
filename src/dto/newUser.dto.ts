@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsStrongPassword } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class NewUserDto implements Record<string, any> {
   @IsNotEmpty()
@@ -7,6 +7,6 @@ export class NewUserDto implements Record<string, any> {
   @IsNotEmpty()
   phone: string;
 
-  @IsStrongPassword()
+  @IsNotEmpty()
   password: string;
 }

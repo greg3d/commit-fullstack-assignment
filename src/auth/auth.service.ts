@@ -52,9 +52,10 @@ export class AuthService {
     dto.password = await bcrypt.hash(dto.password, ROUNDS);
     let newUser = this.usersRepository.create(dto);
     newUser = await this.usersRepository.save(newUser);
+
     return {
       username: newUser.username,
-      access_token: await this.generateToken(newUser)
+      token: await this.generateToken(newUser)
     };
 
   }
