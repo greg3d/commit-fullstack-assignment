@@ -1,10 +1,7 @@
 import type {ChangeEvent, FormEvent} from 'react';
 import React, {useEffect, useRef, useState} from 'react';
 import {useRegisterUserMutation} from "../store/userApiSlice";
-import {
-    Box,
-    Button,
-} from "@mui/material";
+import {Box, Button,} from "@mui/material";
 import {InputData, validateForm} from "../helpers/inputData";
 import CustomInput from "../components/CustomInput";
 import type {RootState} from "../store/store";

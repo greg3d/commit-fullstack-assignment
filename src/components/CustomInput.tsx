@@ -1,5 +1,6 @@
-import React, {ChangeEvent} from 'react';
-import {Input as _Input, Box, TextField} from "@mui/material";
+import type {ChangeEvent} from 'react';
+import React from 'react';
+import {Box, TextField} from "@mui/material";
 
 
 const CustomInput = ({type, name, value, errorMessage, onChange}: {
