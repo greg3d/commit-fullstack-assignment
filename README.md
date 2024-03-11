@@ -34,6 +34,12 @@ Apps runs in **dev** mode
 4. BCrypt hash for passwords in DB
 5. JWT Token generation for auth
 
+### TODO (what might be better): 
+- save JWT Token locally in browser (session storage/local storage)
+- Better component composition :)
+- separate repo for Entities, Dto, Classes, that both apps imports.
+- finally deal with Zod...
+
 ### API endpoints:
 
 *Register*
